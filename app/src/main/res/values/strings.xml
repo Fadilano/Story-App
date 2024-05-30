@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">JKT Story app</string>
+    <string name="password">Password</string>
+    <string name="nama">nama</string>
+    <string name="email">Email</string>
+    <string name="register">Register</string>
+    <string name="welcome_to_jkt_story">Welcome to JKT Story</string>
+    <string name="login_dulu_wots">Login dulu wots</string>
+    <string name="login">Login</string>
+    <string name="description">Description</string>
+    <string name="deskripsi">deskripsi</string>
+    <string name="camera">CAMERA</string>
+    <string name="upload">UPLOAD</string>
+</resources>
