@@ -2,7 +2,6 @@ package com.submission.jktstoryapp.data.response
 
 import com.google.gson.annotations.SerializedName
 
-
 data class FileUploadResponse(
     @field:SerializedName("error")
     val error: Boolean,

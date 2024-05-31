@@ -7,15 +7,15 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.submission.jktstoryapp.LoadingStateAdapter
 import com.submission.jktstoryapp.R
 import com.submission.jktstoryapp.StoryListAdapter
 import com.submission.jktstoryapp.ViewModelFactory
 import com.submission.jktstoryapp.databinding.ActivityMainBinding
 import com.submission.jktstoryapp.ui.addStory.AddStoryActivity
 import com.submission.jktstoryapp.ui.login.LoginActivity
-import kotlinx.coroutines.launch
+import com.submission.jktstoryapp.ui.map.MapsActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var storyListAdapter: StoryListAdapter
 
 
-    private val mainViewmodel by viewModels<MainViewmodel> {
+    private val mainViewmodel by viewModels<MainViewModel> {
         ViewModelFactory.getInstance(this)
     }
 
@@ -33,22 +33,32 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         checkLogin()
-        setupRecyclerView()
 
+        binding.recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
-        mainViewmodel.stories.observe(this) { stories ->
-            storyListAdapter.submitList(stories)
-        }
+        getAllStory()
 
         mainViewmodel.isLoading.observe(this) {
             showLoading(it)
         }
-        mainViewmodel.getAllStories(this)
+
 
         binding.floatingActionButton.setOnClickListener {
             val intent = Intent(this, AddStoryActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun getAllStory() {
+        val adapter = StoryListAdapter()
+        binding.recyclerViewMain.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+        mainViewmodel.stories.observe(this, {
+            adapter.submitData(lifecycle, it)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -58,6 +68,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_map -> {
+                moveToMap()
+                true
+            }
+
             R.id.action_logout -> {
                 mainViewmodel.logout()
                 moveToLogin()
@@ -70,15 +85,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        mainViewmodel.getAllStories(this)
+        getAllStory()
     }
 
     private fun checkLogin() {
-        mainViewmodel.getSession().observe(this) {session ->
+        mainViewmodel.getSession().observe(this) { session ->
             if (session == null || session.token?.isEmpty() != false) {
                 moveToLogin()
             } else {
-                mainViewmodel.getAllStories(this)
+                getAllStory()
             }
         }
     }
@@ -89,12 +104,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-    private fun setupRecyclerView() {
-        storyListAdapter = StoryListAdapter()
-        binding.recyclerViewMain.apply {
-            adapter = storyListAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-        }
+
+    private fun moveToMap() {
+        val intent = Intent(this, MapsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun showLoading(isLoading: Boolean) {

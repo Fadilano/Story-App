@@ -1,6 +1,7 @@
-package com.submission.jktstoryapp.ui.main
+package com.submission.jktstoryapp.ui.map
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,25 +16,21 @@ import com.submission.jktstoryapp.data.response.LoginResult
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class MainViewmodel(private val storyRepository: StoryRepository) : ViewModel() {
+class MapsViewModel(private val storyRepository: StoryRepository) : ViewModel() {
     private val _stories = MutableLiveData<List<ListStoryItem?>>()
     val stories: LiveData<List<ListStoryItem?>> = _stories
 
-    private var _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
 
-    fun getAllStories(context: Context) {
+    fun getStoryWithLocation(context: Context, location: Int = 1) {
         viewModelScope.launch {
-            _isLoading.value = true
             try {
-                val ListStory = storyRepository.getAllStory()
-                _stories.value = ListStory
+                val ListStoryWithLocation = storyRepository.getStoryWithLocation(location)
+                _stories.value = ListStoryWithLocation
+                Log.d("MapsActivity", "Fetching stories with location: $location")
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()?.string()
                 val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
                 Toast.makeText(context, errorResponse.message, Toast.LENGTH_SHORT).show()
-            } finally {
-                _isLoading.value = false
             }
         }
     }
@@ -41,12 +38,4 @@ class MainViewmodel(private val storyRepository: StoryRepository) : ViewModel() 
     fun getSession(): LiveData<LoginResult?> {
         return storyRepository.getSession().asLiveData()
     }
-
-    fun logout() {
-        viewModelScope.launch {
-            storyRepository.logout()
-        }
-
-    }
-
 }

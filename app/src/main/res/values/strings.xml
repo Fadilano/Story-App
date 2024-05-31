@@ -11,4 +11,6 @@
     <string name="deskripsi">deskripsi</string>
     <string name="camera">CAMERA</string>
     <string name="upload">UPLOAD</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="retry">coba lagi</string>
 </resources>

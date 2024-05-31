@@ -4,4 +4,9 @@
         android:id="@+id/action_logout"
         android:iconTint="@color/white"
         android:title="LogOut" />
+
+    <item
+        android:id="@+id/action_map"
+        android:iconTint="@color/white"
+        android:title="Map" />
 </menu>

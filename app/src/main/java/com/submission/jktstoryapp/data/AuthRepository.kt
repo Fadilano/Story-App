@@ -6,7 +6,10 @@ import com.submission.jktstoryapp.data.response.LoginResult
 import com.submission.jktstoryapp.data.response.RegisterResponse
 import com.submission.jktstoryapp.data.retrofit.ApiService
 
-class AuthRepository(private val apiService: ApiService, private val userPreference: UserPreference)  {
+class AuthRepository(
+    private val apiService: ApiService,
+    private val userPreference: UserPreference
+) {
     suspend fun register(name: String, email: String, password: String): RegisterResponse {
         return apiService.register(name, email, password)
     }
@@ -20,6 +23,7 @@ class AuthRepository(private val apiService: ApiService, private val userPrefere
     }
 
     companion object {
-        fun getInstance(apiService: ApiService, userPreference: UserPreference) = AuthRepository(apiService, userPreference)
+        fun getInstance(apiService: ApiService, userPreference: UserPreference) =
+            AuthRepository(apiService, userPreference)
     }
 }

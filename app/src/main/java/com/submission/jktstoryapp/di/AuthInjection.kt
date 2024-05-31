@@ -3,7 +3,6 @@ package com.submission.jktstoryapp.di
 import android.content.Context
 import com.submission.jktstoryapp.data.AuthRepository
 import com.submission.jktstoryapp.data.preference.UserPreference
-import com.submission.jktstoryapp.data.preference.dataStore
 import com.submission.jktstoryapp.data.retrofit.ApiConfig
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
