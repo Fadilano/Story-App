@@ -37,11 +37,7 @@ class addStoryViewModel(private val storyRepository: StoryRepository) : ViewMode
                 )
 
                 val response = storyRepository.uploadStory(multipartBody, requestBody)
-                if (!response.error) {
-                    _isresponse.value = true
-                } else {
-                    _isresponse.value = false
-                }
+                _isresponse.value = !response.error
 
 
             } catch (e: HttpException) {
